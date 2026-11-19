@@ -19,9 +19,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
-import android.widget.LinearLayout
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
