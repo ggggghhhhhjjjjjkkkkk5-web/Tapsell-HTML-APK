@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#10152a">
+<title>دانلودر اینستاگرام</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,#293d70,#10152a 55%,#090d18);color:#fff;font-family:Tahoma,Arial,sans-serif;padding:24px 18px}
+main{max-width:480px;margin:auto}.brand{display:flex;align-items:center;gap:12px;margin:18px 0 42px}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#ff8a35,#e52e75,#8245d9);display:grid;place-items:center;font-size:25px}.brand small{color:#aab7d3}.brand h1{font-size:19px;margin:0 0 6px}.hero{text-align:center;margin-bottom:30px}.hero h2{font-size:25px;margin:0 0 12px}.hero p{color:#b6c2da;font-size:13px;line-height:2}.panel{background:#ffffff0c;border:1px solid #ffffff1c;border-radius:22px;padding:18px;box-shadow:0 18px 50px #0003}.label{font-size:12px;color:#d6def0;display:block;margin:4px 0 10px}input{width:100%;height:52px;border:1px solid #ffffff30;border-radius:13px;background:#080d1d;color:#fff;padding:0 13px;font:13px Tahoma;direction:ltr;text-align:left;outline:none}input:focus{border-color:#70a8ff}button{width:100%;height:52px;border:0;border-radius:13px;background:linear-gradient(100deg,#476dff,#9a55e9);color:white;font:bold 15px Tahoma;margin-top:13px}button:disabled{opacity:.55}.hint{font-size:11px;color:#9eacc8;line-height:2;margin:13px 2px 0}.status{display:none;margin-top:15px;padding:13px;border-radius:12px;background:#0b172b;color:#d8e5ff;font-size:12px;line-height:2;overflow-wrap:anywhere}.status.show{display:block}.result{display:none;margin-top:12px}.result.show{display:block}.result button{background:linear-gradient(100deg,#139c72,#35c99b)}.settings{margin-top:22px;padding:14px;border:1px solid #ffffff17;border-radius:16px}.settings summary{font-size:12px;color:#bdc9e1;cursor:pointer}.settings p{font-size:11px;line-height:2;color:#9eacc8}.footer{text-align:center;color:#7785a3;font-size:10px;margin:28px 0 10px}
+</style>
+</head>
+<body>
+<main>
+ <div class="brand"><div class="logo">↓</div><div><h1>دانلودر اینستاگرام</h1><small>ذخیره ویدئو، ریلز و عکس</small></div></div>
+ <section class="hero"><h2>لینک اینستاگرام را وارد کن</h2><p>لینک پست، ریلز یا ویدئوی عمومی را جای‌گذاری کن و فایل را در گوشی ذخیره کن.</p></section>
+ <section class="panel">
+  <label class="label" for="postUrl">لینک پست یا ریلز</label>
+  <input id="postUrl" type="url" inputmode="url" placeholder="https://www.instagram.com/reel/..." autocomplete="off">
+  <button id="go">دریافت لینک دانلود</button>
+  <div class="status" id="status" role="status"></div>
+  <div class="result" id="result"><button id="save">ذخیره در گوشی</button></div>
+  <p class="hint">فقط محتوای عمومی یا محتوایی را دانلود کن که اجازه ذخیره آن را داری. ورود به حساب اینستاگرام در این برنامه درخواست نمی‌شود.</p>
+ </section>
+ <details class="settings">
+  <summary>تنظیم سرویس پردازش لینک</summary>
+  <p>برای فعال شدن استخراج لینک، نشانی یک نمونه API سازگار با Cobalt که اجازه استفاده از آن را داری وارد کن. سرویس‌های عمومی ممکن است محدودیت یا قطعی داشته باشند.</p>
+  <label class="label" for="apiUrl">نشانی API (POST /)</label>
+  <input id="apiUrl" type="url" placeholder="https://your-cobalt-instance.example/">
+  <button id="saveApi" type="button">ذخیره نشانی API</button>
+ </details>
+ <div class="footer">نسخه ۱.۰.۰ · بدون نیاز به ورود به اینستاگرام</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let downloadUrl="",downloadName="instagram_media.mp4";
+const savedApi=localStorage.getItem("igdl_api")||"";
+$("apiUrl").value=savedApi;
+function message(text){$("status").textContent=text;$("status").classList.add("show")}
+function validInstagramUrl(raw){try{const u=new URL(raw);return (u.hostname==="instagram.com"||u.hostname.endsWith(".instagram.com"))&&/^\/(p|reel|reels|tv|stories)\//.test(u.pathname)}catch(e){return false}}
+$("saveApi").onclick=()=>{let v=$("apiUrl").value.trim();try{const u=new URL(v);if(!["https:","http:"].includes(u.protocol))throw 0;localStorage.setItem("igdl_api",u.href.replace(/\/$/,""));message("نشانی سرویس ذخیره شد.")}catch(e){message("نشانی API معتبر نیست.")}};
+$("go").onclick=async()=>{
+ const raw=$("postUrl").value.trim();$("result").classList.remove("show");downloadUrl="";
+ if(!validInstagramUrl(raw)){message("لطفاً یک لینک معتبر و عمومی از اینستاگرام وارد کن.");return}
+ const api=localStorage.getItem("igdl_api");
+ if(!api){message("رابط برنامه آماده است؛ برای استخراج واقعی لینک، ابتدا نشانی API سازگار و مجاز را در بخش تنظیمات وارد کن. این برنامه بدون سرویس پردازش نمی‌تواند لینک مستقیم را از اینستاگرام استخراج کند.");return}
+ $("go").disabled=true;message("در حال بررسی لینک…");
+ try{
+  const response=await fetch(api,{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify({url:raw,videoQuality:"720",downloadMode:"auto",filenameStyle:"pretty"})});
+  const data=await response.json();
+  if(!response.ok||data.status==="error")throw new Error(data.error?.code||"سرویس نتوانست لینک را پردازش کند.");
+  if(data.status==="picker"&&Array.isArray(data.picker)&&data.picker.length){downloadUrl=data.picker[0].url;downloadName="instagram_media_"+(data.picker[0].type||"file");}
+  else if(["tunnel","redirect"].includes(data.status)&&data.url){downloadUrl=data.url;downloadName=data.filename||"instagram_media.mp4";}
+  else throw new Error("پاسخ سرویس قابل پشتیبانی نیست.");
+  $("result").classList.add("show");message("لینک آماده شد. برای ذخیره فایل روی دکمه زیر بزن.");
+ }catch(e){message("خطا: "+(e.message||"اتصال به سرویس برقرار نشد.")+"\nممکن است سرویس محدود باشد یا دسترسی مرورگر به آن را ندهد.");}
+ finally{$("go").disabled=false}
+};
+$("save").onclick=()=>{if(downloadUrl&&window.AndroidDownloads){window.AndroidDownloads.save(downloadUrl,downloadName)}else if(downloadUrl){location.href=downloadUrl}};
+</script>
+</body>
+</html>
