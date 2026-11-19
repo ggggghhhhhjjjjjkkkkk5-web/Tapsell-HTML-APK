@@ -30,6 +30,7 @@ class MainActivity : Activity() {
     private val network = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler(Looper.getMainLooper())
     @Volatile private var pendingMembershipNonce: String? = null
+    private val membershipPrefs by lazy { getSharedPreferences("membership", MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +52,10 @@ class MainActivity : Activity() {
         if (data.scheme != "mediafetch" || data.host != "authorized") return
         val nonce = data.getQueryParameter("nonce") ?: return
         if (nonce != pendingMembershipNonce) return
+        val userId = data.getQueryParameter("uid") ?: return
+        val signature = data.getQueryParameter("sig") ?: return
+        if (!userId.matches(Regex("\\d+")) || signature.length != 64) return
+        membershipPrefs.edit().putString("user_id", userId).putString("signature", signature).apply()
         pendingMembershipNonce = null
         val quoted = JSONObject.quote(nonce)
         if (::webView.isInitialized) {
@@ -59,6 +64,37 @@ class MainActivity : Activity() {
     }
 
     inner class DownloadBridge(private val context: Context) {
+
+        @JavascriptInterface
+        fun checkMembership(): String {
+            val userId = membershipPrefs.getString("user_id", null) ?: return "not_member"
+            val signature = membershipPrefs.getString("signature", null) ?: return "not_member"
+            return try {
+                val connection = (URL("https://mediafetch-bale-bot.onrender.com/membership").openConnection() as HttpURLConnection).apply {
+                    requestMethod = "POST"
+                    connectTimeout = 7000
+                    readTimeout = 7000
+                    doOutput = true
+                    setRequestProperty("Content-Type", "application/json")
+                    setRequestProperty("Accept", "application/json")
+                }
+                try {
+                    val payload = JSONObject().put("userId", userId).put("signature", signature).toString()
+                    connection.outputStream.use { it.write(payload.toByteArray(Charsets.UTF_8)) }
+                    val code = connection.responseCode
+                    if (code !in 200..299) return "error"
+                    val body = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                    if (JSONObject(body).optBoolean("member", false)) "member" else {
+                        membershipPrefs.edit().clear().apply()
+                        "not_member"
+                    }
+                } finally { connection.disconnect() }
+            } catch (e: Exception) {
+                Log.e("MediaFetch", "Membership verification failed", e)
+                "error"
+            }
+        }
+
         @JavascriptInterface
         fun requestMembership(): String {
             val nonce = UUID.randomUUID().toString()
