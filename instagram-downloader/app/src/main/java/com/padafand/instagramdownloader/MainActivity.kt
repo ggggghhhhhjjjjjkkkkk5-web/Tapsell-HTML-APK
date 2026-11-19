@@ -1,4 +1,4 @@
-package com.padafand.instagramdownloader
+package com.mediafetch.downloader
 
 import android.app.Activity
 import android.app.DownloadManager
