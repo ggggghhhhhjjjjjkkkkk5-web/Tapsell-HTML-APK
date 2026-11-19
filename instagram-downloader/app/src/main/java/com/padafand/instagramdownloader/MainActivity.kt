@@ -18,14 +18,16 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import android.widget.LinearLayout
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import ir.tapsell.plus.AdRequestCallback
-import ir.tapsell.plus.AdShowListener
 import ir.tapsell.plus.TapsellPlus
+import ir.tapsell.plus.TapsellPlusBannerType
 import ir.tapsell.plus.TapsellPlusInitListener
 import ir.tapsell.plus.model.AdNetworkError
 import ir.tapsell.plus.model.AdNetworks
 import ir.tapsell.plus.model.TapsellPlusAdModel
-import ir.tapsell.plus.model.TapsellPlusErrorModel
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -33,15 +35,27 @@ import java.util.concurrent.Executors
 
 class MainActivity : Activity() {
     private lateinit var webView: WebView
+    private lateinit var bannerContainer: FrameLayout
+    private var bannerResponseId: String? = null
     private val network = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler(Looper.getMainLooper())
     @Volatile private var tapsellReady = false
-    private var rewardedAdInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        }
         webView = WebView(this)
-        setContentView(webView)
+        webView.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f)
+        bannerContainer = FrameLayout(this).apply {
+            visibility = android.view.View.GONE
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (50 * resources.displayMetrics.density).toInt())
+        }
+        root.addView(webView)
+        root.addView(bannerContainer)
+        setContentView(root)
         webView.settings.javaScriptEnabled = true
         webView.settings.domStorageEnabled = true
         webView.settings.allowFileAccess = true
@@ -62,6 +76,7 @@ class MainActivity : Activity() {
             override fun onInitializeSuccess(adNetworks: AdNetworks) {
                 tapsellReady = true
                 Log.i("MediaFetch", "Tapsell initialized: " + adNetworks.name)
+                loadStandardBanner()
             }
 
             override fun onInitializeFailed(adNetworks: AdNetworks, error: AdNetworkError) {
@@ -71,71 +86,44 @@ class MainActivity : Activity() {
         })
     }
 
-    private fun rewardResult(success: Boolean, message: String) {
-        runOnUiThread {
-            if (::webView.isInitialized && !isFinishing) {
-                webView.evaluateJavascript(
-                    "window.onRewardedAdResult(" + success + ", " + JSONObject.quote(message) + ")", null
-                )
-            }
-        }
-    }
-
-    private fun showRewardedAd() {
-        if (rewardedAdInProgress) return
-        if (!tapsellReady) {
-            rewardResult(false, "اتصال تپسل آماده نیست؛ تنظیمات کلید و اینترنت را بررسی کن.")
-            return
-        }
-        rewardedAdInProgress = true
-        TapsellPlus.requestRewardedVideoAd(
+    private fun loadStandardBanner() {
+        if (!tapsellReady || bannerResponseId != null || isFinishing) return
+        TapsellPlus.requestStandardBannerAd(
             this,
-            "6aff73e36cbc4169d6c38560",
+            "6aff7ca4728e2256843b0c95",
+            TapsellPlusBannerType.BANNER_320x50,
             object : AdRequestCallback() {
                 override fun response(ad: TapsellPlusAdModel) {
-                    TapsellPlus.showRewardedVideoAd(this@MainActivity, ad.responseId, object : AdShowListener() {
-                        private var rewarded = false
-
-                        override fun onOpened(ad: TapsellPlusAdModel) {
-                            Log.d("MediaFetch", "Rewarded ad opened")
-                        }
-
-                        override fun onClosed(ad: TapsellPlusAdModel) {
-                            rewardedAdInProgress = false
-                            if (!rewarded) {
-                                rewardResult(false, "تبلیغ کامل تماشا نشد؛ برای دانلود باید ویدئو را تا پایان ببینی.")
+                    super.response(ad)
+                    if (isFinishing || isDestroyed) return
+                    bannerResponseId = ad.responseId
+                    bannerContainer.visibility = android.view.View.VISIBLE
+                    TapsellPlus.showStandardBannerAd(
+                        this@MainActivity,
+                        ad.responseId,
+                        bannerContainer,
+                        object : ir.tapsell.plus.AdShowListener() {
+                            override fun onOpened(model: TapsellPlusAdModel) {
+                                super.onOpened(model)
+                                Log.i("MediaFetch", "Standard banner opened")
+                            }
+                            override fun onError(error: ir.tapsell.plus.model.TapsellPlusErrorModel) {
+                                super.onError(error)
+                                Log.e("MediaFetch", "Standard banner show failed: " + error.toString())
+                                bannerContainer.visibility = android.view.View.GONE
                             }
                         }
-
-                        override fun onRewarded(ad: TapsellPlusAdModel) {
-                            rewarded = true
-                            rewardedAdInProgress = false
-                            rewardResult(true, "تماشای تبلیغ تأیید شد؛ دانلود شروع می‌شود.")
-                        }
-
-                        override fun onError(error: TapsellPlusErrorModel) {
-                            rewardedAdInProgress = false
-                            rewardResult(false, "نمایش تبلیغ ناموفق بود. دوباره تلاش کن.")
-                            Log.e("MediaFetch", "Rewarded ad error: " + error.toString())
-                        }
-                    })
+                    )
                 }
-
                 override fun error(message: String) {
-                    rewardedAdInProgress = false
-                    rewardResult(false, "فعلاً تبلیغی موجود نیست؛ کمی بعد دوباره امتحان کن.")
-                    Log.e("MediaFetch", "Rewarded ad request failed: " + message)
+                    Log.e("MediaFetch", "Standard banner request failed: " + message)
+                    runOnUiThread { bannerContainer.visibility = android.view.View.GONE }
                 }
             }
         )
     }
 
     inner class DownloadBridge(private val context: Context) {
-        @JavascriptInterface
-        fun showRewardedAd() {
-            mainHandler.post { this@MainActivity.showRewardedAd() }
-        }
-
         @JavascriptInterface
         fun process(postUrl: String, apiBase: String, authToken: String) {
             network.execute {
@@ -315,6 +303,9 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         network.shutdown()
         mainHandler.removeCallbacksAndMessages(null)
+        if (bannerResponseId != null && ::bannerContainer.isInitialized) {
+            try { TapsellPlus.destroyStandardBanner(this, bannerResponseId, bannerContainer) } catch (e: Exception) { Log.w("MediaFetch", "Banner destroy failed", e) }
+        }
         if (::webView.isInitialized) webView.destroy()
         super.onDestroy()
     }
