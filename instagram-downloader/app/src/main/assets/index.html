@@ -35,7 +35,8 @@ main{max-width:480px;margin:auto}.brand{display:flex;align-items:center;gap:12px
 </main>
 <script>
 const $=id=>document.getElementById(id);
-$("apiUrl").value=localStorage.getItem("igdl_api")||"";
+const DEFAULT_API="https://tapsell-html-apk.onrender.com";
+$("apiUrl").value=localStorage.getItem("igdl_api")||DEFAULT_API;
 $("apiAuth").value=localStorage.getItem("igdl_auth")||"";
 let busy=false;
 function message(text){$("status").textContent=text;$("status").classList.add("show")}
@@ -43,10 +44,10 @@ function validInstagramUrl(raw){try{const u=new URL(raw);return u.protocol==="ht
 $("saveApi").onclick=()=>{try{const u=new URL($("apiUrl").value.trim());if(u.protocol!=="https:")throw 0;localStorage.setItem("igdl_api",u.href.replace(/\/$/,""));localStorage.setItem("igdl_auth",$("apiAuth").value.trim());message("تنظیمات سرویس روی گوشی ذخیره شد.")}catch(e){message("نشانی سرویس معتبر نیست؛ باید با https شروع شود.")}};
 $("go").onclick=()=>{
  if(busy)return;
- const raw=$("postUrl").value.trim(),api=localStorage.getItem("igdl_api")||"";
+ const raw=$("postUrl").value.trim(),api=localStorage.getItem("igdl_api")||DEFAULT_API;
  $("results").replaceChildren();
  if(!validInstagramUrl(raw)){message("لطفاً لینک معتبر یک پست یا ریلز عمومی اینستاگرام را وارد کن.");return}
- if(!api){message("برای دریافت لینک واقعی، ابتدا نشانی API مجاز خودت را در بخش تنظیمات ثبت کن.");return}
+ if(!api){message("نشانی سرویس تنظیم نشده است.");return}
  if(!window.AndroidDownloads){message("این قابلیت فقط در نسخه اندرویدی برنامه فعال است.");return}
  busy=true;$("go").disabled=true;message("در حال پردازش لینک…");
  window.AndroidDownloads.process(raw,api,localStorage.getItem("igdl_auth")||"");
