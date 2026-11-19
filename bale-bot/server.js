@@ -5,11 +5,11 @@ const TOKEN = process.env.BALE_BOT_TOKEN || "";
 const CHANNEL = process.env.BALE_CHANNEL_ID || "@downloader_instagram";
 const CHANNEL_URL = process.env.BALE_CHANNEL_URL || "https://ble.ir/downloader_instagram";
 const BOT_USERNAME = process.env.BALE_BOT_USERNAME || "downloader_instagram_bot";
-const BASE_URL = (process.env.PUBLIC_BASE_URL || "").replace(/\/$/, "");
-const WEBHOOK_SECRET = process.env.WEBHOOK_PATH_SECRET || "";
+const BASE_URL = (process.env.PUBLIC_BASE_URL || process.env.RENDER_EXTERNAL_URL || "").replace(/\/$/, "");
+const WEBHOOK_SECRET = process.env.WEBHOOK_PATH_SECRET || crypto.randomBytes(32).toString("hex");
 
-if (!TOKEN || !BASE_URL || !WEBHOOK_SECRET) {
-  console.error("Required env: BALE_BOT_TOKEN, PUBLIC_BASE_URL, WEBHOOK_PATH_SECRET");
+if (!TOKEN || !BASE_URL) {
+  console.error("Required env: BALE_BOT_TOKEN and Render public URL");
   process.exit(1);
 }
 const API = `https://tapi.bale.ai/bot${TOKEN}/`;
