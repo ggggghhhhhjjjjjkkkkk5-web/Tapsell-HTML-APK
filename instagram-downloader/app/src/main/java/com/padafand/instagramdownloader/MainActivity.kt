@@ -54,7 +54,7 @@ class MainActivity : Activity() {
             Log.e("MediaFetch", "TAPSELL_APP_KEY is not configured")
             return
         }
-        TapsellPlus.initialize(this, appKey, object : TapsellPlusInitListener {
+        TapsellPlus.initialize(this, appKey, object : TapsellPlusInitListener() {
             override fun onInitializeSuccess(adNetworks: AdNetworks) {
                 tapsellReady = true
                 Log.i("MediaFetch", "Tapsell initialized: " + adNetworks.name)
@@ -87,9 +87,9 @@ class MainActivity : Activity() {
         TapsellPlus.requestRewardedVideoAd(
             this,
             "6aff73e36cbc4169d6c38560",
-            object : AdRequestCallback {
+            object : AdRequestCallback() {
                 override fun response(ad: TapsellPlusAdModel) {
-                    TapsellPlus.showRewardedVideoAd(this@MainActivity, ad.responseId, object : AdShowListener {
+                    TapsellPlus.showRewardedVideoAd(this@MainActivity, ad.responseId, object : AdShowListener() {
                         private var rewarded = false
 
                         override fun onOpened(ad: TapsellPlusAdModel) {
