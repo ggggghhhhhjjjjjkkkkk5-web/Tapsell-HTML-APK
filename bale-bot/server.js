@@ -90,7 +90,7 @@ const server = http.createServer(async (req, res) => {
       const input = JSON.parse(body || "{}");
       const userId = String(input.userId || ""); const signature = String(input.signature || "");
       const expected = membershipSignature(userId); const a = Buffer.from(signature); const b = Buffer.from(expected);
-      const valid = /^\\d+$/.test(userId) && a.length === b.length && crypto.timingSafeEqual(a, b);
+      const valid = /^\d+$/.test(userId) && a.length === b.length && crypto.timingSafeEqual(a, b);
       if (!valid) { res.writeHead(200, { "content-type": "application/json" }); return res.end(JSON.stringify({ ok: true, member: false })); }
       const member = await isMember(userId);
       res.writeHead(200, { "content-type": "application/json" }); return res.end(JSON.stringify({ ok: true, member }));
