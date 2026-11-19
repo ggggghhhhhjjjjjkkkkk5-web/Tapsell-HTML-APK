@@ -36,3 +36,5 @@ jobs:
         with:
           name: instagram-downloader-debug
           path: instagram-downloader/app/build/outputs/apk/debug/app-debug.apk
+
+# Rebuild after Tapsell Kotlin callback constructor fix
