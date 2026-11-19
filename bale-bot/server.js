@@ -30,9 +30,10 @@ async function isMember(userId) {
   return ["creator", "administrator", "member"].includes(member?.status) ||
     (member?.status === "restricted" && member?.is_member === true);
 }
-function keyboard(nonce, joined = false) {
+function membershipSignature(userId) { return crypto.createHmac("sha256", TOKEN).update(String(userId)).digest("hex"); }
+function keyboard(nonce, joined = false, userId = "") {
   if (joined) return { inline_keyboard: [[
-    { text: "بازگشت به برنامه و ادامه دانلود", url: `mediafetch://authorized?nonce=${encodeURIComponent(nonce)}` }
+    { text: "بازگشت به برنامه و ادامه دانلود", url: `mediafetch://authorized?nonce=${encodeURIComponent(nonce)}&uid=${encodeURIComponent(userId)}&sig=${membershipSignature(userId)}` }
   ]] };
   return { inline_keyboard: [
     [{ text: "عضویت در کانال", url: CHANNEL_URL }],
@@ -47,7 +48,7 @@ async function sendGate(chatId, nonce, userId) {
     await bale("sendMessage", {
       chat_id: chatId,
       text: "عضویت شما تأیید شد. برای بازگشت به برنامه و ادامه دانلود، دکمه زیر را بزنید.",
-      reply_markup: keyboard(nonce, true)
+      reply_markup: keyboard(nonce, true, userId)
     });
   } else {
     await bale("sendMessage", {
@@ -82,6 +83,19 @@ async function handleUpdate(update) {
   }
 }
 const server = http.createServer(async (req, res) => {
+  if (req.method === "POST" && req.url === "/membership") {
+    let body = ""; req.setEncoding("utf8");
+    for await (const chunk of req) { body += chunk; if (body.length > 16384) { res.writeHead(413); return res.end(); } }
+    try {
+      const input = JSON.parse(body || "{}");
+      const userId = String(input.userId || ""); const signature = String(input.signature || "");
+      const expected = membershipSignature(userId); const a = Buffer.from(signature); const b = Buffer.from(expected);
+      const valid = /^\\d+$/.test(userId) && a.length === b.length && crypto.timingSafeEqual(a, b);
+      if (!valid) { res.writeHead(200, { "content-type": "application/json" }); return res.end(JSON.stringify({ ok: true, member: false })); }
+      const member = await isMember(userId);
+      res.writeHead(200, { "content-type": "application/json" }); return res.end(JSON.stringify({ ok: true, member }));
+    } catch (error) { console.error("Membership API failed:", error.message); res.writeHead(503, { "content-type": "application/json" }); return res.end(JSON.stringify({ ok: false, error: "membership_check_unavailable" })); }
+  }
   if (req.method === "GET" && req.url === "/health") {
     res.writeHead(200, { "content-type": "application/json" });
     return res.end(JSON.stringify({ ok: true, service: "bale-membership-gate" }));
