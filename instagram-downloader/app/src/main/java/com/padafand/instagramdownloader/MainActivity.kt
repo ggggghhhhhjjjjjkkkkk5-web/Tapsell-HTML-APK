@@ -54,7 +54,7 @@ class MainActivity : Activity() {
             Log.e("MediaFetch", "TAPSELL_APP_KEY is not configured")
             return
         }
-        TapsellPlus.initialize(this, appKey, object : TapsellPlusInitListener() {
+        TapsellPlus.initialize(this, appKey, object : TapsellPlusInitListener {
             override fun onInitializeSuccess(adNetworks: AdNetworks) {
                 tapsellReady = true
                 Log.i("MediaFetch", "Tapsell initialized: " + adNetworks.name)
