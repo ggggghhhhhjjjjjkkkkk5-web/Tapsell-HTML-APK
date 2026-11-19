@@ -3,8 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val tapsellAppKey = System.getenv("TAPSELL_APP_KEY") ?: ""
-
 android {
     namespace = "com.mediafetch.downloader"
     compileSdk = 35
@@ -13,9 +11,8 @@ android {
         applicationId = "com.mediafetch.downloader"
         minSdk = 23
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.0.4"
-        buildConfigField("String", "TAPSELL_APP_KEY", "\"" + tapsellAppKey + "\"")
+        versionCode = 6
+        versionName = "1.0.5"
         multiDexEnabled = true
     }
 
@@ -30,6 +27,5 @@ android {
 }
 
 dependencies {
-    implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.3.3")
     implementation("androidx.multidex:multidex:2.0.1")
 }
