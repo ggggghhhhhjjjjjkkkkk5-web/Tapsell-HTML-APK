@@ -38,3 +38,5 @@ jobs:
           path: instagram-downloader/app/build/outputs/apk/debug/app-debug.apk
 
 # Rebuild after Tapsell Kotlin callback constructor fix
+
+# Rebuild after matching Tapsell SDK listener interface
