@@ -8,11 +8,20 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import ir.tapsell.plus.AdRequestCallback
+import ir.tapsell.plus.AdShowListener
+import ir.tapsell.plus.TapsellPlus
+import ir.tapsell.plus.TapsellPlusInitListener
+import ir.tapsell.plus.model.AdNetworkError
+import ir.tapsell.plus.model.AdNetworks
+import ir.tapsell.plus.model.TapsellPlusAdModel
+import ir.tapsell.plus.model.TapsellPlusErrorModel
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -22,6 +31,8 @@ class MainActivity : Activity() {
     private lateinit var webView: WebView
     private val network = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler(Looper.getMainLooper())
+    @Volatile private var tapsellReady = false
+    private var rewardedAdInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +45,93 @@ class MainActivity : Activity() {
         webView.webViewClient = WebViewClient()
         webView.addJavascriptInterface(DownloadBridge(this), "AndroidDownloads")
         webView.loadUrl("file:///android_asset/index.html")
+        initializeTapsell()
+    }
+
+    private fun initializeTapsell() {
+        val appKey = BuildConfig.TAPSELL_APP_KEY.trim()
+        if (appKey.isEmpty()) {
+            Log.e("MediaFetch", "TAPSELL_APP_KEY is not configured")
+            return
+        }
+        TapsellPlus.initialize(this, appKey, object : TapsellPlusInitListener {
+            override fun onInitializeSuccess(adNetworks: AdNetworks) {
+                tapsellReady = true
+                Log.i("MediaFetch", "Tapsell initialized: " + adNetworks.name)
+            }
+
+            override fun onInitializeFailed(adNetworks: AdNetworks, error: AdNetworkError) {
+                tapsellReady = false
+                Log.e("MediaFetch", "Tapsell init failed: " + adNetworks.name + " " + error.errorMessage)
+            }
+        })
+    }
+
+    private fun rewardResult(success: Boolean, message: String) {
+        runOnUiThread {
+            if (::webView.isInitialized && !isFinishing) {
+                webView.evaluateJavascript(
+                    "window.onRewardedAdResult(" + success + ", " + JSONObject.quote(message) + ")", null
+                )
+            }
+        }
+    }
+
+    private fun showRewardedAd() {
+        if (rewardedAdInProgress) return
+        if (!tapsellReady) {
+            rewardResult(false, "اتصال تپسل آماده نیست؛ تنظیمات کلید و اینترنت را بررسی کن.")
+            return
+        }
+        rewardedAdInProgress = true
+        TapsellPlus.requestRewardedVideoAd(
+            this,
+            "6aff73e36cbc4169d6c38560",
+            object : AdRequestCallback {
+                override fun response(ad: TapsellPlusAdModel) {
+                    TapsellPlus.showRewardedVideoAd(this@MainActivity, ad.responseId, object : AdShowListener {
+                        private var rewarded = false
+
+                        override fun onOpened(ad: TapsellPlusAdModel) {
+                            Log.d("MediaFetch", "Rewarded ad opened")
+                        }
+
+                        override fun onClosed(ad: TapsellPlusAdModel) {
+                            rewardedAdInProgress = false
+                            if (!rewarded) {
+                                rewardResult(false, "تبلیغ کامل تماشا نشد؛ برای دانلود باید ویدئو را تا پایان ببینی.")
+                            }
+                        }
+
+                        override fun onRewarded(ad: TapsellPlusAdModel) {
+                            rewarded = true
+                            rewardedAdInProgress = false
+                            rewardResult(true, "تماشای تبلیغ تأیید شد؛ دانلود شروع می‌شود.")
+                        }
+
+                        override fun onError(error: TapsellPlusErrorModel) {
+                            rewardedAdInProgress = false
+                            rewardResult(false, "نمایش تبلیغ ناموفق بود. دوباره تلاش کن.")
+                            Log.e("MediaFetch", "Rewarded ad error: " + error.toString())
+                        }
+                    })
+                }
+
+                override fun error(message: String) {
+                    rewardedAdInProgress = false
+                    rewardResult(false, "فعلاً تبلیغی موجود نیست؛ کمی بعد دوباره امتحان کن.")
+                    Log.e("MediaFetch", "Rewarded ad request failed: " + message)
+                }
+            }
+        )
     }
 
     inner class DownloadBridge(private val context: Context) {
+        @JavascriptInterface
+        fun showRewardedAd() {
+            mainHandler.post { this@MainActivity.showRewardedAd() }
+        }
+
         @JavascriptInterface
         fun process(postUrl: String, apiBase: String, authToken: String) {
             network.execute {
@@ -91,7 +186,7 @@ class MainActivity : Activity() {
                 val uri = Uri.parse(url)
                 require(uri.scheme == "https" || uri.scheme == "http") { "لینک دانلود معتبر نیست" }
                 val cleanName = suggestedName.substringAfterLast('/')
-                    .replace(Regex("[^\\p{L}\\p{N}._-]"), "_")
+                    .replace(Regex("[^\\\\p{L}\\\\p{N}._-]"), "_")
                     .take(100).ifBlank { "instagram_media.mp4" }
                 val request = DownloadManager.Request(uri)
                     .setTitle(cleanName)
