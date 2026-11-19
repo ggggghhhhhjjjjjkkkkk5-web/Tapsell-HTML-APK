@@ -24,10 +24,7 @@ jobs:
           gradle-version: '8.9'
       - name: Build debug APK
         working-directory: instagram-downloader
-        env:
-          TAPSELL_APP_KEY: ${{ secrets.TAPSELL_APP_KEY }}
         run: |
-          if [ -z "$TAPSELL_APP_KEY" ]; then echo "Missing TAPSELL_APP_KEY repository secret"; exit 1; fi
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
           gradle assembleDebug
@@ -37,6 +34,3 @@ jobs:
           name: instagram-downloader-debug
           path: instagram-downloader/app/build/outputs/apk/debug/app-debug.apk
 
-# Rebuild after Tapsell Kotlin callback constructor fix
-
-# Rebuild after matching Tapsell SDK listener interface
