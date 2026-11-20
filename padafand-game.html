@@ -156,6 +156,22 @@ h1{font-size:25px;margin:0 0 12px}
  .menu-buttons button{height:44px}
  .controls{bottom:10px}
 }
+
+#online-rank{background:linear-gradient(100deg,#126dce,#254c9d);border:1px solid #8bcaff55;font-weight:bold}
+#rank-panel{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:18px;background:#000c}
+.rank-card{width:100%;max-width:390px;max-height:90dvh;overflow:auto;padding:20px;border:1px solid #4ca8e577;border-radius:20px;background:linear-gradient(145deg,#172a40,#080e19);box-shadow:0 20px 70px #000a}
+.rank-card h2{margin:0 0 12px;font-size:19px;text-align:center}
+.rank-card input{width:100%;height:45px;margin:6px 0;padding:0 12px;border:1px solid #ffffff30;border-radius:10px;background:#061321;color:#fff;font:14px Tahoma;direction:rtl}
+.rank-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.rank-card button{height:43px;border:0;border-radius:10px;background:linear-gradient(100deg,#347cff,#47c5ff);color:white;font:bold 13px Tahoma}
+.rank-card .secondary{background:#26384e;border:1px solid #ffffff25}
+#rank-message{min-height:34px;color:#b8d8f3;font-size:12px;line-height:1.8;text-align:center}
+#rank-list{margin:10px 0;padding:0;list-style:none}
+#rank-list li{display:flex;justify-content:space-between;gap:10px;padding:9px 8px;border-bottom:1px solid #ffffff16;font-size:12px}
+#rank-list li:first-child{color:#ffd878}
+.rank-head{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.rank-head strong{font-size:13px}
+
 </style>
 </head>
 
@@ -183,6 +199,7 @@ h1{font-size:25px;margin:0 0 12px}
   </div>
 
   <button id="channel">📢 کانال بازی</button>
+  <button id="online-rank">🏆 حساب کاربری و رده‌بندی آنلاین</button>
   <button class="start" id="start">شروع بازی ←</button>
  </div>
 
@@ -224,6 +241,27 @@ h1{font-size:25px;margin:0 0 12px}
   <button id="dialog-restart">
    شروع دوباره
   </button>
+ </div>
+</div>
+
+
+<div id="rank-panel" class="hidden">
+ <div class="rank-card">
+  <h2>🏆 رده‌بندی جهانی</h2>
+  <div id="rank-message">برای ثبت رکورد و مشاهده رتبه، وارد حساب خود شوید.</div>
+  <input id="rank-username" type="text" maxlength="20" autocomplete="username" placeholder="نام کاربری">
+  <input id="rank-password" type="password" maxlength="72" autocomplete="current-password" placeholder="رمز عبور (حداقل ۸ کاراکتر)">
+  <div class="rank-actions">
+   <button id="rank-login">ورود</button>
+   <button id="rank-register">ثبت‌نام</button>
+  </div>
+  <div class="rank-actions">
+   <button id="rank-refresh" class="secondary">به‌روزرسانی جدول</button>
+   <button id="rank-logout" class="secondary">خروج از حساب</button>
+  </div>
+  <div class="rank-head"><strong>۱۰۰ بازیکن برتر</strong><span id="my-rank"></span></div>
+  <ol id="rank-list"></ol>
+  <button id="rank-close" class="secondary" style="width:100%">بستن</button>
  </div>
 </div>
 
@@ -418,6 +456,75 @@ const GameAudio=(()=>{
   gameOver
  };
 })();
+
+
+/* =========================
+   ONLINE LEADERBOARD
+========================= */
+const LEADERBOARD_API="https://padafand-leaderboard-api.onrender.com";
+let leaderboardToken="";
+try{leaderboardToken=localStorage.getItem("padafandAuthToken")||"";}catch(e){}
+function rankMessage(message){$("rank-message").textContent=message;}
+async function rankRequest(path,options={}){
+ const headers={"Content-Type":"application/json",...(options.headers||{})};
+ if(leaderboardToken)headers.Authorization="Bearer "+leaderboardToken;
+ const response=await fetch(LEADERBOARD_API+path,{...options,headers});
+ const data=await response.json().catch(()=>({error:"پاسخ سرور نامعتبر است."}));
+ if(!response.ok)throw new Error(data.error||"خطا در ارتباط با سرور");
+ return data;
+}
+async function rankAuth(mode){
+ const username=$("rank-username").value.trim();
+ const password=$("rank-password").value;
+ if(!username||!password){rankMessage("نام کاربری و رمز عبور را وارد کنید.");return;}
+ rankMessage("در حال اتصال...");
+ try{
+  const data=await rankRequest("/auth/"+mode,{method:"POST",body:JSON.stringify({username,password})});
+  leaderboardToken=data.token;
+  try{localStorage.setItem("padafandAuthToken",leaderboardToken);}catch(e){}
+  rankMessage("خوش آمدی "+data.player.username+"؛ حساب فعال شد.");
+  $("rank-password").value="";
+  await refreshLeaderboard();
+ }catch(e){rankMessage(e.message);}
+}
+async function refreshLeaderboard(){
+ try{
+  const data=await rankRequest("/leaderboard?limit=100");
+  const list=$("rank-list");
+  list.replaceChildren();
+  data.players.forEach((p,i)=>{
+   const li=document.createElement("li");
+   const name=document.createElement("span");
+   const score=document.createElement("span");
+   name.textContent=(i+1)+". "+p.username;
+   score.textContent=Number(p.score).toLocaleString("fa-IR")+" امتیاز";
+   li.append(name,score);list.append(li);
+  });
+  if(!data.players.length){const li=document.createElement("li");li.textContent="هنوز رکوردی ثبت نشده است.";list.append(li);}
+  if(leaderboardToken){
+   try{const me=await rankRequest("/rank");$("my-rank").textContent="رتبه شما: "+Number(me.player.rank).toLocaleString("fa-IR");}
+   catch(e){$("my-rank").textContent="";}
+  }else $("my-rank").textContent="";
+  rankMessage("جدول با موفقیت به‌روز شد.");
+ }catch(e){rankMessage(e.message);}
+}
+async function submitOnlineScore(){
+ if(!leaderboardToken)return;
+ try{
+  await rankRequest("/scores",{method:"POST",body:JSON.stringify({score})});
+ }catch(e){console.warn("Online score was not submitted:",e.message);}
+}
+$("online-rank").onclick=()=>{$("rank-panel").classList.remove("hidden");refreshLeaderboard();};
+$("rank-close").onclick=()=>$("rank-panel").classList.add("hidden");
+$("rank-login").onclick=()=>rankAuth("login");
+$("rank-register").onclick=()=>rankAuth("register");
+$("rank-refresh").onclick=refreshLeaderboard;
+$("rank-logout").onclick=()=>{
+ leaderboardToken="";
+ try{localStorage.removeItem("padafandAuthToken");}catch(e){}
+ $("my-rank").textContent="";
+ rankMessage("از حساب خارج شدید.");
+};
 
 /* =========================
    GAME VARIABLES
@@ -721,6 +828,7 @@ function endGame(){
  keys.right=false;
 
  GameAudio.gameOver();
+ submitOnlineScore();
 
  $("dialog-title").textContent=
   "پایان بازی";
