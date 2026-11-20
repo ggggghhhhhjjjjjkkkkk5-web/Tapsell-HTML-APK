@@ -172,6 +172,10 @@ h1{font-size:25px;margin:0 0 12px}
 .rank-head{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
 .rank-head strong{font-size:13px}
 
+
+/* Ad integration slot: remains hidden until valid placement settings exist. */
+#padafand-banner-slot{position:fixed;z-index:2;left:50%;bottom:6px;transform:translateX(-50%);width:min(100%,480px);min-height:0;display:flex;justify-content:center;align-items:center;pointer-events:none}
+#padafand-banner-slot:not(.hidden){pointer-events:auto}
 </style>
 </head>
 
@@ -265,6 +269,10 @@ h1{font-size:25px;margin:0 0 12px}
  </div>
 </div>
 
+
+<div id="padafand-banner-slot" class="hidden" aria-label="جایگاه تبلیغات" aria-hidden="true"></div>
+<script src="./ads/ad-config.js"></script>
+<script src="./ads/ad-manager.js"></script>
 <script>
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
@@ -3031,6 +3039,7 @@ window.addEventListener(
 
 updateScore();
 updateWallet();
+if(window.PadafandAds) window.PadafandAds.init();
 
 </script>
 
