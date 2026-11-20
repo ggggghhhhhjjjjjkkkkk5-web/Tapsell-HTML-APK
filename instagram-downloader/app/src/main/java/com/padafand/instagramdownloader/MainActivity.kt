@@ -40,26 +40,50 @@ class MainActivity : Activity() {
         webView.settings.domStorageEnabled = true
         webView.settings.allowFileAccess = true
         webView.webChromeClient = WebChromeClient()
-        webView.webViewClient = WebViewClient()
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                pageLoaded = true
+                val approved = membershipPrefs.getString("approved_nonce", null) ?: return
+                val quoted = JSONObject.quote(approved)
+                webView.evaluateJavascript("window.onMembershipApproved($quoted)", null)
+                membershipPrefs.edit().remove("approved_nonce").apply()
+            }
+        }
         webView.addJavascriptInterface(DownloadBridge(this), "AndroidDownloads")
+        pendingMembershipNonce = membershipPrefs.getString("pending_nonce", null)
         webView.loadUrl("file:///android_asset/index.html")
+        handleAuthorizationIntent(intent)
     }
+
+    private var pageLoaded = false
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        handleAuthorizationIntent(intent)
+    }
+
+    private fun handleAuthorizationIntent(intent: Intent) {
         val data = intent.data ?: return
         if (data.scheme != "mediafetch" || data.host != "authorized") return
         val nonce = data.getQueryParameter("nonce") ?: return
-        if (nonce != pendingMembershipNonce) return
+        val expectedNonce = pendingMembershipNonce ?: membershipPrefs.getString("pending_nonce", null)
+        if (nonce != expectedNonce) return
         val userId = data.getQueryParameter("uid") ?: return
         val signature = data.getQueryParameter("sig") ?: return
-        if (!userId.matches(Regex("\\d+")) || signature.length != 64) return
-        membershipPrefs.edit().putString("user_id", userId).putString("signature", signature).apply()
+        if (!userId.matches(Regex("\\d+")) || !signature.matches(Regex("[a-fA-F0-9]{64}"))) return
+        membershipPrefs.edit()
+            .putString("user_id", userId)
+            .putString("signature", signature)
+            .putString("approved_nonce", nonce)
+            .remove("pending_nonce")
+            .apply()
         pendingMembershipNonce = null
-        val quoted = JSONObject.quote(nonce)
-        if (::webView.isInitialized) {
+        if (pageLoaded && ::webView.isInitialized) {
+            val quoted = JSONObject.quote(nonce)
             webView.evaluateJavascript("window.onMembershipApproved($quoted)", null)
+            membershipPrefs.edit().remove("approved_nonce").apply()
         }
     }
 
@@ -99,6 +123,7 @@ class MainActivity : Activity() {
         fun requestMembership(): String {
             val nonce = UUID.randomUUID().toString()
             pendingMembershipNonce = nonce
+            membershipPrefs.edit().putString("pending_nonce", nonce).apply()
             return try {
                 val url = Uri.parse("https://ble.ir/downloader_instagram_bot")
                     .buildUpon().appendQueryParameter("start", nonce).build()
@@ -108,6 +133,7 @@ class MainActivity : Activity() {
                 nonce
             } catch (e: Exception) {
                 pendingMembershipNonce = null
+                membershipPrefs.edit().remove("pending_nonce").apply()
                 Log.e("MediaFetch", "Could not open Bale bot", e)
                 ""
             }
