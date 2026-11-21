@@ -1,83 +1,183 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101827">
-<meta name="description" content="دانلود رایگان و آسان ریلز، ویدئو و عکس از لینک‌های عمومی اینستاگرام؛ بدون ثبت‌نام و بدون نیاز به رمز عبور.">
-<meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="googlebot" content="index, follow">
-<meta name="keywords" content="دانلودر اینستاگرام, دانلود ریلز, دانلود پست اینستاگرام, دانلود ویدئو اینستاگرام, دانلود عکس اینستاگرام">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090d18">
+<meta name="description" content="دانلود ریلز، ویدئو و عکس از لینک‌های عمومی اینستاگرام؛ ساده و بدون ثبت‌نام.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="googlebot" content="index,follow">
+<meta name="keywords" content="دانلودر اینستاگرام, دانلود ریلز, دانلود ویدئو اینستاگرام, دانلود عکس اینستاگرام">
 <link rel="canonical" href="https://instagram-downloader-fa.onrender.com/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fa_IR">
-<meta property="og:title" content="دانلودر اینستاگرام | دانلود ریلز، ویدئو و عکس">
-<meta property="og:description" content="لینک عمومی اینستاگرام را وارد کن و فایل را دریافت کن؛ رایگان و بدون ثبت‌نام.">
+<meta property="og:title" content="دانلودر | دانلود از اینستاگرام">
+<meta property="og:description" content="لینک عمومی اینستاگرام را وارد کن و فایل را روی دستگاهت ذخیره کن.">
 <meta property="og:url" content="https://instagram-downloader-fa.onrender.com/">
 <meta name="twitter:card" content="summary">
-<title>دانلودر اینستاگرام | دانلود ریلز، ویدئو و عکس</title>
+<title>دانلودر | دانلود ریلز، ویدئو و عکس اینستاگرام</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#26364d;--muted:#9aaac0;--text:#f5f8ff;--accent:#8b5cf6;--accent2:#ec4899;--green:#22c55e}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#35205f 0,transparent 48%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;display:flex;flex-direction:column}
-header{width:min(1040px,92%);margin:auto;padding:24px 0;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:18px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:22px;box-shadow:0 8px 30px #8b5cf655}
-button,input{font:inherit}.settings{border:1px solid var(--line);background:#ffffff08;color:#dce6f5;border-radius:12px;padding:10px 14px;cursor:pointer}
-main{width:min(760px,92%);margin:50px auto 70px;text-align:center;flex:1}.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid #8b5cf655;background:#8b5cf61a;color:#d8c8ff;padding:8px 13px;border-radius:99px;font-size:13px}
-h1{font-size:clamp(30px,6vw,48px);line-height:1.45;margin:22px 0 10px}h1 span{background:linear-gradient(90deg,#c4b5fd,#f9a8d4);background-clip:text;color:transparent}
-.sub{color:var(--muted);line-height:2;margin:0 auto 30px;max-width:570px;font-size:15px}
-.download-box{background:linear-gradient(145deg,#17243a,#111a2a);border:1px solid var(--line);border-radius:22px;padding:12px;box-shadow:0 24px 70px #0005}
-.input-wrap{display:flex;gap:10px;background:#0a1220;border:1px solid #31425c;border-radius:15px;padding:7px}
-input{min-width:0;flex:1;background:transparent;border:0;outline:0;color:white;padding:12px;font-size:14px;direction:ltr;text-align:left}input::placeholder{color:#72839c}
-.primary{border:0;border-radius:12px;background:linear-gradient(110deg,var(--accent),var(--accent2));color:white;font-weight:800;padding:0 24px;min-height:48px;cursor:pointer;white-space:nowrap}.primary:disabled{opacity:.55;cursor:wait}
-.hint{color:#8494aa;font-size:12px;text-align:right;padding:13px 8px 3px}
-#status{display:none;text-align:right;margin-top:15px;padding:14px 16px;border-radius:13px;background:#0b1423;border:1px solid var(--line);line-height:1.9;font-size:14px}#status.show{display:block}.error{color:#fda4af}.success{color:#86efac}.download-link{display:inline-block;margin-top:12px;text-decoration:none;color:white;background:#16834a;padding:10px 17px;border-radius:10px;font-weight:bold}
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px;text-align:right}.feature{background:#ffffff07;border:1px solid var(--line);border-radius:15px;padding:17px}.feature b{display:block;margin:8px 0;font-size:14px}.feature small{color:var(--muted);line-height:1.8}.ico{font-size:22px}
-footer{border-top:1px solid #ffffff12;color:#718198;text-align:center;padding:22px;font-size:12px;line-height:2}
-dialog{width:min(520px,92%);border:1px solid var(--line);border-radius:18px;background:#121d30;color:white;padding:22px}dialog::backdrop{background:#000a}.dialog-title{font-weight:bold;margin-bottom:12px}.api-input{width:100%;border:1px solid var(--line);border-radius:11px;background:#0b1423;margin:10px 0 14px}.dialog-actions{display:flex;gap:10px;justify-content:flex-end}.secondary{background:#26364d;color:white;border:0;border-radius:10px;padding:11px 18px;cursor:pointer}
-@media(max-width:560px){header{padding:17px 0}main{margin:34px auto 48px}.input-wrap{flex-direction:column}.primary{width:100%}.features{grid-template-columns:1fr}.feature{display:flex;gap:12px;align-items:center}.feature b{margin:0 0 5px}.sub{font-size:14px}}
-</style></head>
+:root{color-scheme:dark;--bg:#090d18;--surface:#111827;--surface2:#151f31;--line:#263449;--muted:#98a7bc;--text:#f7f8fc;--purple:#8b5cf6;--pink:#ec4899;--green:#22c55e;--red:#fb7185}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#39205c 0,transparent 48%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;display:flex;flex-direction:column}
+header{width:min(1000px,92%);margin:auto;padding:23px 0;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:19px;letter-spacing:-.3px}
+.logo{width:43px;height:43px;border-radius:15px;background:linear-gradient(135deg,var(--purple),var(--pink));display:grid;place-items:center;font-size:24px;box-shadow:0 8px 28px #8b5cf644}
+main{width:min(740px,92%);margin:42px auto 65px;text-align:center;flex:1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8b5cf655;background:#8b5cf619;color:#d8c8ff;padding:8px 14px;border-radius:99px;font-size:12px}
+h1{font-size:clamp(30px,6vw,49px);line-height:1.5;margin:19px 0 8px;letter-spacing:-1.2px}
+h1 span{background:linear-gradient(90deg,#c4b5fd,#f9a8d4);background-clip:text;color:transparent}
+.lead{color:var(--muted);font-size:14px;line-height:2;margin:0 auto 28px;max-width:560px}
+.panel{background:linear-gradient(145deg,#172236,#101827);border:1px solid var(--line);border-radius:24px;padding:13px;box-shadow:0 24px 70px #0006;text-align:right}
+.input-row{display:flex;gap:9px;background:#0a1220;border:1px solid #31425c;border-radius:16px;padding:7px}
+#url{min-width:0;flex:1;background:transparent;border:0;outline:0;color:white;padding:13px 12px;font:14px Tahoma,Arial;direction:ltr;text-align:left}
+#url::placeholder{color:#718198}
+button{font:inherit;cursor:pointer}
+.primary{border:0;border-radius:12px;background:linear-gradient(110deg,var(--purple),var(--pink));color:white;font-weight:800;padding:0 22px;min-height:49px;white-space:nowrap;box-shadow:0 7px 20px #8b5cf633}
+.primary:disabled{opacity:.55;cursor:wait}
+.input-note{font-size:11px;color:#8493a8;padding:13px 8px 3px}
+#result{display:none;margin-top:14px;padding:16px;background:#0a1321;border:1px solid var(--line);border-radius:16px;line-height:1.9}
+#result.show{display:block}
+.state-line{display:flex;align-items:center;gap:10px;font-size:13px}
+.spinner{width:17px;height:17px;border:2px solid #ffffff30;border-top-color:#c4b5fd;border-radius:50%;animation:spin .8s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.progress-wrap{margin-top:13px}
+.progress-meta{display:flex;justify-content:space-between;color:#aebbd0;font-size:11px;margin-bottom:8px}
+.track{height:8px;border-radius:99px;background:#263449;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:99px;transition:width .18s}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.save{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:linear-gradient(110deg,#159957,#22c55e);color:#fff;border:0;border-radius:12px;padding:12px 17px;font-weight:800;font-size:13px;min-height:45px}
+.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#243249;color:#e8edf7;border:1px solid #354660;border-radius:12px;padding:11px 16px;font-size:13px}
+.error{color:#fda4af}.success{color:#86efac}
+.items{display:grid;gap:9px;margin-top:13px}
+.item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px;background:#111d2e;border:1px solid #26364d;border-radius:12px}
+.item span{font-size:12px;color:#dce5f3}
+.item button{border:0;border-radius:9px;background:#16834a;color:white;padding:9px 13px;font-size:12px;font-weight:bold}
+.privacy{display:flex;align-items:flex-start;gap:10px;text-align:right;color:#aebbd0;font-size:12px;line-height:1.9;margin:17px 4px 0}
+.privacy b{color:#d7e3f5}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;text-align:right}
+.feature{background:#ffffff07;border:1px solid #ffffff12;border-radius:16px;padding:17px}
+.feature .icon{font-size:21px}
+.feature b{display:block;font-size:13px;margin:9px 0 5px}
+.feature small{color:var(--muted);font-size:11px;line-height:1.8}
+footer{border-top:1px solid #ffffff12;color:#75849a;text-align:center;padding:20px 14px;font-size:11px;line-height:2}
+@media(max-width:560px){header{padding:17px 0}main{margin:29px auto 48px}.input-row{flex-direction:column}#url{padding:13px}.primary{width:100%}.features{grid-template-columns:1fr}.feature{display:flex;align-items:center;gap:13px;padding:13px}.feature b{margin:0 0 4px}.feature .icon{font-size:23px}.lead{font-size:13px}.actions>*{flex:1}}
+</style>
+</head>
 <body>
-<header><div class="brand"><div class="logo">↓</div><span>دانلودر سریع</span></div><button class="settings" id="openSettings">⚙ تنظیمات اتصال</button></header>
+<header><div class="brand"><div class="logo">↓</div><span>دانلودر</span></div></header>
 <main>
-<div class="pill">✦ دانلودر آنلاین اینستاگرام</div>
-<h1>دانلود آسان از <span>اینستاگرام</span></h1>
-<p class="sub">لینک پست، ریلز یا ویدئوی عمومی را وارد کن و فایل را دریافت کن؛ سریع، ساده و بدون ساخت حساب کاربری.</p>
-<section class="download-box">
-<div class="input-wrap"><input id="url" type="url" inputmode="url" placeholder="https://www.instagram.com/reel/..." autocomplete="off"><button class="primary" id="download">دریافت فایل</button></div>
-<div class="hint">لینک پست یا ریلز عمومی اینستاگرام را اینجا قرار بده.</div>
-<div id="status" role="status" aria-live="polite"></div>
+<div class="eyebrow">✦ دانلودر آنلاین اینستاگرام</div>
+<h1>دانلود از <span>اینستاگرام</span></h1>
+<p class="lead">لینک پست یا ریلز عمومی را وارد کن و فایل را مستقیم روی دستگاهت ذخیره کن.</p>
+<section class="panel">
+<div class="input-row"><input id="url" type="url" inputmode="url" placeholder="https://www.instagram.com/reel/..." autocomplete="off" aria-label="لینک اینستاگرام"><button class="primary" id="download">دریافت فایل</button></div>
+<div class="input-note">لینک عمومی پست، ریلز یا ویدئو را وارد کن.</div>
+<div id="result" role="status" aria-live="polite"></div>
 </section>
+<div class="privacy"><span>🔒</span><div><b>حریم خصوصی شما حفظ می‌شود.</b><br>این سایت فایل‌ها را در سرور یا گالری آنلاین ذخیره نمی‌کند؛ دریافت فایل مستقیماً روی دستگاه شما انجام می‌شود.</div></div>
 <div class="features">
-<div class="feature"><div class="ico">🎬</div><div><b>ریلز و ویدئو</b><small>دریافت ویدئوهای عمومی با لینک مستقیم</small></div></div>
-<div class="feature"><div class="ico">🖼️</div><div><b>عکس و پست</b><small>پشتیبانی از محتوای عمومی در حد توان سرویس</small></div></div>
-<div class="feature"><div class="ico">🔒</div><div><b>بدون ورود</b><small>این سایت رمز عبور اینستاگرام نمی‌خواهد</small></div></div>
+<div class="feature"><div class="icon">🎬</div><div><b>ریلز و ویدئو</b><small>دریافت محتوای عمومی قابل دسترس</small></div></div>
+<div class="feature"><div class="icon">🖼️</div><div><b>عکس و پست</b><small>انتخاب فایل در پست‌های چندرسانه‌ای</small></div></div>
+<div class="feature"><div class="icon">📱</div><div><b>ذخیره روی دستگاه</b><small>بدون ساخت حساب و بدون رمز اینستاگرام</small></div></div>
 </div>
 </main>
-<footer>این ابزار مستقل است و وابستگی یا تأیید رسمی از سوی Instagram / Meta ندارد.<br>فقط محتوایی را دانلود کن که اجازه دسترسی و ذخیره آن را داری.</footer>
-<dialog id="settings"><form method="dialog"><div class="dialog-title">تنظیم آدرس سرور دانلود</div><p style="color:#9aaac0;font-size:13px;line-height:1.9">برای فعال شدن دانلود، آدرس سرور Cobalt که روی Render یا سرور خودت اجرا شده وارد کن. آدرس باید با https:// شروع شود.</p><input class="api-input" id="api" type="url" placeholder="https://your-api.onrender.com/" dir="ltr"><div class="dialog-actions"><button class="secondary" value="cancel">بستن</button><button class="primary" id="saveApi" value="save">ذخیره اتصال</button></div></form></dialog>
+<footer>فقط محتوایی را دریافت کنید که اجازه ذخیره آن را دارید. این ابزار مستقل است و وابستگی رسمی به Instagram یا Meta ندارد.</footer>
 <script>
-const $=s=>document.querySelector(s), dialog=$('#settings'), statusBox=$('#status');
-const DEFAULT_API='https://tapsell-html-apk.onrender.com/';const saved=localStorage.getItem('downloader_api')||DEFAULT_API;$('#api').value=saved;
-function show(message,kind=''){statusBox.className='show '+kind;statusBox.textContent=message}
-$('#openSettings').addEventListener('click',()=>dialog.showModal());
-$('#saveApi').addEventListener('click',e=>{e.preventDefault();const v=$('#api').value.trim();if(v&&!/^https:\/\//i.test(v)){show('آدرس سرور باید با https:// شروع شود.','error');return}localStorage.setItem('downloader_api',v.replace(/\/$/,'')+'/');dialog.close();show(v?'آدرس سرور ذخیره شد. حالا لینک اینستاگرام را وارد کن.':'آدرس سرور پاک شد.','success')});
-async function startDownload(){
- const url=$('#url').value.trim(),api=localStorage.getItem('downloader_api')||DEFAULT_API;
- if(!/^https?:\/\/(www\.)?instagram\.com\//i.test(url)){show('لطفاً یک لینک معتبر از Instagram وارد کن.','error');return}
- if(!api){dialog.showModal();show('ابتدا آدرس سرور دانلود را در تنظیمات وارد کن.','error');return}
- const btn=$('#download');btn.disabled=true;btn.textContent='در حال پردازش…';show('در حال ارتباط با سرور و آماده‌سازی فایل…');
- try{
-  const res=await fetch(api,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({url,videoQuality:'max',filenameStyle:'basic'})});
-  if(!res.ok)throw new Error('سرور پاسخ مناسب نداد (HTTP '+res.status+').');
-  const data=await res.json();
-  if(data.status==='error')throw new Error(data.error?.code||data.text||'این لینک قابل پردازش نیست.');
-  let target=data.url||data.picker?.[0]?.url;
-  if(!target)throw new Error('لینک دانلودی از سرور دریافت نشد.');
-  if(data.status==='picker'&&data.picker?.length>1){
-   statusBox.innerHTML='چند فایل پیدا شد. یکی را انتخاب کن:<br>'+data.picker.map((p,i)=>'<a class="download-link" target="_blank" rel="noopener" href="'+String(p.url).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">دریافت فایل '+(i+1)+'</a>').join(' ');
-  }else{
-   const a=document.createElement('a');a.href=target;a.target='_blank';a.rel='noopener';a.className='download-link';a.textContent='باز کردن / دریافت فایل';statusBox.textContent='فایل آماده است. برای دریافت روی دکمه زیر بزن.';statusBox.appendChild(document.createElement('br'));statusBox.appendChild(a);statusBox.className='show success';
-  }
- }catch(err){show('دانلود انجام نشد: '+(err.message||'خطای ناشناخته')+' اگر سرور تازه روشن شده، وضعیت آن و پشتیبانی اینستاگرام را بررسی کن.','error')}
- finally{btn.disabled=false;btn.textContent='دریافت فایل'}
+'use strict';
+const API='https://tapsell-html-apk.onrender.com/';
+const $=s=>document.querySelector(s);
+const result=$('#result'),button=$('#download');
+function resetResult(){result.replaceChildren();result.className='show'}
+function line(message,loading=false,kind=''){
+ const row=document.createElement('div');row.className='state-line '+kind;
+ if(loading){const spin=document.createElement('span');spin.className='spinner';row.append(spin)}
+ const text=document.createElement('span');text.textContent=message;row.append(text);result.append(row);return text;
 }
-$('#download').addEventListener('click',startDownload);$('#url').addEventListener('keydown',e=>{if(e.key==='Enter')startDownload()});
-</script></body></html>
+function progressUI(label){
+ const wrap=document.createElement('div');wrap.className='progress-wrap';
+ const meta=document.createElement('div');meta.className='progress-meta';
+ const left=document.createElement('span');left.textContent=label;
+ const pct=document.createElement('span');pct.textContent='—';
+ meta.append(left,pct);
+ const track=document.createElement('div');track.className='track';
+ const bar=document.createElement('div');bar.className='bar';track.append(bar);
+ wrap.append(meta,track);result.append(wrap);
+ return {set(v){bar.style.width=Math.max(0,Math.min(100,v))+'%';pct.textContent=Math.round(v)+'%';},unknown(){bar.style.width='35%';bar.style.animation='pulse 1.2s ease-in-out infinite alternate';pct.textContent='در حال انجام';}};
+}
+function filenameFrom(url,type){
+ try{const u=new URL(url);const last=decodeURIComponent(u.pathname.split('/').pop()||'');if(/\.(mp4|jpg|jpeg|png|webp|gif|mov)(\?|$)/i.test(last))return last}catch{}
+ return type&&type.includes('image')?'instagram-image.jpg':'instagram-video.mp4';
+}
+function saveAnchor(url,name){
+ const a=document.createElement('a');a.href=url;a.download=name||'instagram-download';a.rel='noopener';a.target='_blank';a.className='save';a.textContent='⬇ ذخیره در گالری دانلود';
+ result.append(a);
+ const note=document.createElement('div');note.className='input-note';note.textContent='در گوشی، فایل در پوشه دانلودها ذخیره می‌شود؛ محل نمایش آن در گالری به برنامه گالری گوشی بستگی دارد.';result.append(note);
+}
+async function downloadMedia(url,name){
+ const p=progressUI('درصد دریافت فایل');
+ line('در حال دریافت فایل…',true);
+ try{
+  const response=await fetch(url,{mode:'cors'});
+  if(!response.ok)throw new Error('دریافت مستقیم در دسترس نیست');
+  const total=Number(response.headers.get('content-length'))||0;
+  if(!response.body)throw new Error('مرورگر امکان نمایش پیشرفت را ندارد');
+  const reader=response.body.getReader(),chunks=[];let loaded=0;
+  while(true){
+   const {done,value}=await reader.read();if(done)break;
+   chunks.push(value);loaded+=value.length;
+   if(total)p.set(loaded/total*100);else p.unknown();
+  }
+  const type=response.headers.get('content-type')||'application/octet-stream';
+  const blob=new Blob(chunks,{type});const objectUrl=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=objectUrl;a.download=name||filenameFrom(url,type);a.className='save';a.textContent='⬇ ذخیره در گالری دانلود';result.append(a);
+  a.click();
+  p.set(100);
+  line('فایل آماده و برای ذخیره به دستگاه ارسال شد.',false,'success');
+  const note=document.createElement('div');note.className='input-note';note.textContent='فایل فقط روی دستگاه شما ذخیره می‌شود؛ نسخه‌ای در سایت نگه‌داری نمی‌شود.';result.append(note);
+  setTimeout(()=>URL.revokeObjectURL(objectUrl),120000);
+ }catch(e){
+  result.querySelectorAll('.progress-wrap').forEach(x=>x.remove());
+  line('لینک فایل آماده است. برای ذخیره، دکمه زیر را بزن.',false,'success');
+  saveAnchor(url,name||filenameFrom(url,''));
+ }
+}
+async function handleDownload(){
+ const url=$('#url').value.trim();
+ if(!/^https?:\/\/(www\.)?instagram\.com\//i.test(url)){resetResult();line('لطفاً لینک معتبر و عمومی اینستاگرام را وارد کن.',false,'error');return}
+ button.disabled=true;button.textContent='در حال پردازش…';resetResult();
+ line('در حال بررسی لینک و آماده‌سازی فایل…',true);
+ const apiProgress=progressUI('وضعیت پردازش');
+ apiProgress.unknown();
+ try{
+  const response=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({url,videoQuality:'max',filenameStyle:'basic'})});
+  if(!response.ok)throw new Error('سرور پاسخ مناسب نداد ('+response.status+').');
+  const data=await response.json();
+  if(data.status==='error')throw new Error(data.error?.code||data.text||'این لینک قابل پردازش نیست.');
+  apiProgress.set(100);
+  result.querySelector('.progress-wrap')?.remove();
+  if(Array.isArray(data.picker)&&data.picker.length){
+   line('چند فایل پیدا شد؛ فایل موردنظر را انتخاب کن.',false,'success');
+   const list=document.createElement('div');list.className='items';
+   data.picker.forEach((item,index)=>{
+    if(!item.url)return;
+    const row=document.createElement('div');row.className='item';
+    const label=document.createElement('span');label.textContent='فایل '+(index+1);
+    const pick=document.createElement('button');pick.type='button';pick.textContent='انتخاب و ذخیره';
+    pick.addEventListener('click',()=>{list.remove();downloadMedia(item.url,item.filename||'instagram-'+(index+1));});
+    row.append(label,pick);list.append(row);
+   });
+   result.append(list);
+  }else if(data.url){
+   await downloadMedia(data.url,data.filename||filenameFrom(data.url,''));
+  }else{
+   throw new Error('سرور لینک دانلودی برنگرداند.');
+  }
+ }catch(error){line('دانلود انجام نشد: '+(error.message||'خطای ناشناخته')+'. ممکن است محتوا خصوصی، محدود یا موقتاً در دسترس نباشد.',false,'error')}
+ finally{button.disabled=false;button.textContent='دریافت فایل'}
+}
+button.addEventListener('click',handleDownload);
+$('#url').addEventListener('keydown',e=>{if(e.key==='Enter')handleDownload()});
+</script>
+</body>
+</html>
