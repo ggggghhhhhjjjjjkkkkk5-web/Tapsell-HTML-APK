@@ -45,7 +45,7 @@ function parseResult(raw) {
     const event = block.match(/^event:\s*(\S+)/m)?.[1];
     const data = block.match(/^data:\s*(.+)$/m)?.[1];
     if (!event || !data) continue;
-    if (event === "error") throw new Error("خطای موتور: " + data.slice(0, 500));
+    if (event === "error") { console.error("Hugging Face returned error event:", JSON.stringify({ data, block: block.slice(0, 2000) })); throw new Error(data && data !== "null" ? "خطای موتور: " + data.slice(0, 500) : "موتور ویدئوساز خطای بدون جزئیات برگرداند؛ احتمالاً پردازش GPU یا صف سرویس متوقف شده است. مدت ۳ ثانیه و تلاش مجدد را امتحان کن."); }
     if (event === "complete") {
       const payload = JSON.parse(data);
       const videoUrl = extractVideoUrl(payload?.[0]);
@@ -53,7 +53,7 @@ function parseResult(raw) {
       return { videoUrl, seed: payload?.[1] };
     }
   }
-  throw new Error("پاسخ نهایی موتور دریافت نشد؛ لطفاً دوباره تلاش کن.");
+  console.error("Unexpected Gradio response:", raw.slice(-3000)); throw new Error("پاسخ موتور ناقص یا نامعتبر بود؛ جزئیات پاسخ در گزارش سرور ثبت شد.");
 }
 
 async function generate(job, input) {
@@ -61,7 +61,7 @@ async function generate(job, input) {
     job.status = "processing";
     job.message = "در حال اتصال به موتور و ورود به صف GPU...";
     const ratio = input.ratio || "9:16";
-    const [height, width] = ratio === "16:9" ? [512, 896] : ratio === "1:1" ? [704, 704] : [896, 512];
+    const [height, width] = ratio === "16:9" ? [512, 704] : ratio === "1:1" ? [512, 512] : [704, 512];
     const data = [
       input.prompt.trim(),
       (input.negativePrompt || "worst quality, inconsistent motion, blurry, jittery, distorted").trim(),
