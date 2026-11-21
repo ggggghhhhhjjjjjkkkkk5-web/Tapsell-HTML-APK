@@ -53,7 +53,7 @@ button{font:inherit;cursor:pointer}
 .item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px;background:#111d2e;border:1px solid #26364d;border-radius:12px}
 .item span{font-size:12px;color:#dce5f3}
 .item button{border:0;border-radius:9px;background:#16834a;color:white;padding:9px 13px;font-size:12px;font-weight:bold}
-.footer-ad{width:min(680px,92%);min-height:90px;margin:24px auto 16px;padding:10px 14px;background:#111827;border:1px solid #263449;border-radius:14px;text-align:center}.footer-ad .ad-caption{font-size:10px;color:#75849a;margin-bottom:6px}
+.footer-ad{width:min(680px,92%);min-height:90px;margin:24px auto 16px;padding:10px 14px;background:#111827;border:1px solid #263449;border-radius:14px;text-align:center}.footer-ad .ad-caption{font-size:10px;color:#75849a;margin-bottom:6px}\n.sticky-mediaad{position:fixed;z-index:9999;left:0;right:0;bottom:0;width:100%;min-height:90px;padding:0 max(0px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(0px,env(safe-area-inset-left));display:flex;justify-content:center;align-items:center;background:rgba(9,13,24,.97);border-top:1px solid #263449;box-shadow:0 -6px 24px #0007;overflow:hidden}.sticky-mediaad #mediaad-3e9JW{width:min(728px,100%);min-height:90px}\nbody{padding-bottom:calc(90px + env(safe-area-inset-bottom))}
 .privacy{display:flex;align-items:flex-start;gap:10px;text-align:right;color:#aebbd0;font-size:12px;line-height:1.9;margin:17px 4px 0}
 .privacy b{color:#d7e3f5}
 .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;text-align:right}
@@ -84,7 +84,7 @@ footer{border-top:1px solid #ffffff12;color:#75849a;text-align:center;padding:20
 </div>
 </main>
 <div class="footer-ad" aria-label="جایگاه تبلیغات"><div class="ad-caption">تبلیغات</div><div id="mediaad-0eVlN"></div></div>
-<footer>فقط محتوایی را دریافت کنید که اجازه ذخیره آن را دارید. این ابزار مستقل است و وابستگی رسمی به Instagram یا Meta ندارد.</footer>
+<div class="sticky-mediaad" aria-label="تبلیغ چسبان پایین صفحه"><div id="mediaad-3e9JW"></div></div>\n<footer>فقط محتوایی را دریافت کنید که اجازه ذخیره آن را دارید. این ابزار مستقل است و وابستگی رسمی به Instagram یا Meta ندارد.</footer>
 <script>
 'use strict';
 const API='https://tapsell-html-apk.onrender.com/';
@@ -180,6 +180,16 @@ async function handleDownload(){
 }
 button.addEventListener('click',handleDownload);
 $('#url').addEventListener('keydown',e=>{if(e.key==='Enter')handleDownload()});
+</script>
+<script type="text/javascript">
+(function (){
+  const head = document.getElementsByTagName("head")[0];
+  const script = document.createElement("script");
+  script.type = "text/javascript";
+  script.async = true;
+  script.src = "https://s1.mediaad.org/serve/instagram-downloader-fa.onrender.com/loader.js";
+  head.appendChild(script);
+})();
 </script>
 </body>
 </html>
