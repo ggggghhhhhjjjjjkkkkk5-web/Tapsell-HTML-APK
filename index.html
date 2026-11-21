@@ -45,12 +45,12 @@ dialog{width:min(520px,92%);border:1px solid var(--line);border-radius:18px;back
 <dialog id="settings"><form method="dialog"><div class="dialog-title">تنظیم آدرس سرور دانلود</div><p style="color:#9aaac0;font-size:13px;line-height:1.9">برای فعال شدن دانلود، آدرس سرور Cobalt که روی Render یا سرور خودت اجرا شده وارد کن. آدرس باید با https:// شروع شود.</p><input class="api-input" id="api" type="url" placeholder="https://your-api.onrender.com/" dir="ltr"><div class="dialog-actions"><button class="secondary" value="cancel">بستن</button><button class="primary" id="saveApi" value="save">ذخیره اتصال</button></div></form></dialog>
 <script>
 const $=s=>document.querySelector(s), dialog=$('#settings'), statusBox=$('#status');
-const saved=localStorage.getItem('downloader_api')||'';$('#api').value=saved;
+const DEFAULT_API='https://tapsell-html-apk.onrender.com/';const saved=localStorage.getItem('downloader_api')||DEFAULT_API;$('#api').value=saved;
 function show(message,kind=''){statusBox.className='show '+kind;statusBox.textContent=message}
 $('#openSettings').addEventListener('click',()=>dialog.showModal());
 $('#saveApi').addEventListener('click',e=>{e.preventDefault();const v=$('#api').value.trim();if(v&&!/^https:\/\//i.test(v)){show('آدرس سرور باید با https:// شروع شود.','error');return}localStorage.setItem('downloader_api',v.replace(/\/$/,'')+'/');dialog.close();show(v?'آدرس سرور ذخیره شد. حالا لینک اینستاگرام را وارد کن.':'آدرس سرور پاک شد.','success')});
 async function startDownload(){
- const url=$('#url').value.trim(),api=localStorage.getItem('downloader_api');
+ const url=$('#url').value.trim(),api=localStorage.getItem('downloader_api')||DEFAULT_API;
  if(!/^https?:\/\/(www\.)?instagram\.com\//i.test(url)){show('لطفاً یک لینک معتبر از Instagram وارد کن.','error');return}
  if(!api){dialog.showModal();show('ابتدا آدرس سرور دانلود را در تنظیمات وارد کن.','error');return}
  const btn=$('#download');btn.disabled=true;btn.textContent='در حال پردازش…';show('در حال ارتباط با سرور و آماده‌سازی فایل…');
