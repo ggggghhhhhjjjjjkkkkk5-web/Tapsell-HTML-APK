@@ -1,25 +1,31 @@
-# Instagram Downloader Website
+# Persian Instagram Downloader
 
-A Persian, mobile-friendly frontend for downloading publicly accessible Instagram media through a self-hosted Cobalt API.
+A public, mobile-first Persian frontend for downloading publicly accessible Instagram media through the Cobalt API.
 
-## Files
-- `index.html`: standalone static website.
-- `Dockerfile`: existing Cobalt API container definition in this repository.
+## Deployment
+- Static frontend: Render static site, publishing the repository root.
+- API: Cobalt API Docker service at `https://tapsell-html-apk.onrender.com/`.
+- The frontend API endpoint is fixed in `index.html`; visitors cannot edit connection settings.
+- No user/admin dashboard or public settings page is included.
 
-## Run the website
-Open `index.html` locally or publish the repository root with GitHub Pages. In the website, open **تنظیمات اتصال** and enter the HTTPS base URL of your deployed Cobalt API.
+## Privacy and file handling
+- The website does not create an online gallery or persist downloaded media.
+- The frontend does not upload downloaded files to a storage bucket or database.
+- Media is fetched from the Cobalt API/source and saved by the visitor's browser to the visitor's device.
+- The API container has no Render persistent disk configured; any temporary processing is ephemeral and is not a user-accessible gallery.
+- The site does not request Instagram passwords, cookies, or account credentials.
+- Download history and media files are not stored by this frontend.
 
-## API deployment
-The repository Dockerfile runs the Cobalt API. Deploy it as a Docker web service (for example, on Render). Configure the service's required environment variables according to the current Cobalt documentation. Set the website's API URL to the deployed service URL, including the trailing slash.
+## Progress and saving
+- The UI shows a real transfer percentage only when the browser can read the media response and its content length.
+- If the media host blocks browser CORS or does not expose a content length, the site offers a direct download link and cannot show a truthful percentage for that transfer.
+- On Android, the browser normally saves the file to Downloads. Whether it appears in the phone's Gallery app depends on the device and Gallery app; a website cannot silently force a save into a native gallery.
 
-The frontend sends a POST request to the API root with:
-```json
-{"url":"https://www.instagram.com/reel/…/","videoQuality":"max","filenameStyle":"basic"}
-```
+## Limitations
+- Only public, accessible Instagram posts/reels are supported, subject to upstream Cobalt and Instagram availability.
+- Private, age-restricted, login-gated, removed, or otherwise restricted content may fail.
+- Use the tool only for content you are authorized to download and respect copyright and platform terms.
+- This independent project is not affiliated with or endorsed by Instagram or Meta.
 
-## Important
-- A working API deployment is required; GitHub Pages only hosts the static website.
-- Instagram may change access rules, rate-limit requests, or block some posts. Private, age-restricted, login-gated, or otherwise inaccessible content may fail.
-- The API must permit browser CORS requests from the website origin.
-- Do not ask users for Instagram passwords or cookies. Respect copyright, privacy, and platform terms.
-- This project does not guarantee availability or support for every Instagram URL.
+## Upstream
+Cobalt API: https://github.com/imputnet/cobalt
